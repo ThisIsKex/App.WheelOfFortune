@@ -99,7 +99,12 @@ function save() {
 }
 
 function load() {
-  const storedParticipants = JSON.parse(localStorage.getItem("wheelOfFortuneParticipants"));
+  const config = localStorage.getItem("wheelOfFortuneParticipants");
+  if (config == undefined) {
+    participants.value = [];
+    return;
+  }
+  const storedParticipants = JSON.parse(config);
   participants.value = storedParticipants ?? [];
 }
 
