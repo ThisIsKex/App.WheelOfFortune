@@ -203,6 +203,7 @@ onMounted(() => {
 .container {
   background-image: url("https://picsum.photos/1920/1080?random");
   height: calc(100vh);
+  background-size: cover;
 }
 
 body::-webkit-scrollbar {
