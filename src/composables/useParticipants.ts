@@ -57,27 +57,29 @@ export function useParticipants() {
       activeParticipant.value = null;
       isRolling.value = true;
       
-      let speed = 20;
+      let speed = 100;
       let counter = 0;
-      const maxIterations = 150;
+      const maxIterations = 50;
       
       const animate = () => {
         if (counter >= maxIterations) {
+          // NOW determine the winner at the very end
           const finalIndex = Math.floor(Math.random() * participants.value.length);
           const winner = participants.value[finalIndex];
           activeParticipant.value = winner;
           
+          // Show winner immediately, then confetti
           setTimeout(() => {
             isRolling.value = false;
             fireConfetti();
             resolve(winner);
-          }, 500);
+          }, 300);
           return;
         }
         
-        // Gradually slow down
-        if (counter > maxIterations * 0.7) {
-          speed += 2;
+        // Gradually slow down in the last 50%
+        if (counter > maxIterations * 0.5) {
+          speed += 15;
         }
         
         // Random selection during roll

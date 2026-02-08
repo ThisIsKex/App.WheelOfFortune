@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import type { Participant } from '../composables/useParticipants';
 
 const props = defineProps<{
@@ -9,39 +9,34 @@ const props = defineProps<{
 
 const slotItems = ref<Participant[]>([]);
 const slotPosition = ref(0);
-const maxScrollPosition = ref(0);
+const isSlowing = ref(false);
 
 // Create extended list for smooth scrolling
 watch(() => props.participants, (newParticipants) => {
   if (newParticipants.length > 0) {
     slotItems.value = [];
     // Create enough repetitions for smooth infinite scroll
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 30; i++) {
       slotItems.value.push(...newParticipants);
     }
-    // Calculate max scroll position (one full cycle of original participants)
-    maxScrollPosition.value = newParticipants.length * 80;
   }
 }, { immediate: true });
 
 // Animate position based on active participant
-watch(() => props.activeParticipant, (newParticipant) => {
+watch(() => props.activeParticipant, (newParticipant, oldParticipant) => {
   if (newParticipant === null) {
     // Reset position when starting new roll
     slotPosition.value = 0;
-  } else {
-    // Move smoothly
+    isSlowing.value = false;
+  } else if (newParticipant !== oldParticipant) {
+    // Continue moving down
     slotPosition.value -= 80;
-    
-    // Create infinite scroll effect by wrapping position
-    if (Math.abs(slotPosition.value) > maxScrollPosition.value * 2) {
-      slotPosition.value = slotPosition.value + maxScrollPosition.value;
-    }
   }
 });
 
 const slotStyle = computed(() => ({
-  transform: `translateY(${slotPosition.value}px)`
+  transform: `translateY(${slotPosition.value}px)`,
+  transition: isSlowing.value ? 'transform 0.2s ease-out' : 'transform 0.05s linear'
 }));
 </script>
 

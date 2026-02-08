@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+defineProps<{
+  disabled?: boolean;
+}>();
+
 const emit = defineEmits<{
   add: [name: string];
 }>();
@@ -24,6 +28,7 @@ const handleAdd = () => {
       placeholder="Enter participant name..."
       prepend-inner-icon="mdi-account-plus"
       class="modern-input"
+      :disabled="disabled"
       @keydown.enter="handleAdd"
       hide-details
     >
@@ -33,6 +38,7 @@ const handleAdd = () => {
           color="primary"
           variant="flat"
           size="small"
+          :disabled="disabled"
           @click="handleAdd"
           class="send-btn"
         ></v-btn>

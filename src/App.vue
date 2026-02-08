@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import AppHeader from './components/AppHeader.vue';
 import ParticipantInput from './components/ParticipantInput.vue';
 import ParticipantGrid from './components/ParticipantGrid.vue';
-import SlotMachine from './components/SlotMachine.vue';
 import WinnerModal from './components/WinnerModal.vue';
 import { useParticipants } from './composables/useParticipants';
 
@@ -43,21 +42,17 @@ const handleAddParticipant = (name: string) => {
       />
 
       <div class="content-area">
-        <!-- Slot Machine during roll -->
-        <SlotMachine 
-          v-if="isRolling"
+        <!-- Input and Grid -->
+        <ParticipantInput 
+          @add="handleAddParticipant" 
+          :disabled="isRolling"
+        />
+        <ParticipantGrid 
           :participants="participants"
           :active-participant="activeParticipant"
+          :is-rolling="isRolling"
+          @remove="removeParticipant"
         />
-
-        <!-- Input and Grid when not rolling -->
-        <template v-if="!isRolling">
-          <ParticipantInput @add="handleAddParticipant" />
-          <ParticipantGrid 
-            :participants="participants"
-            @remove="removeParticipant"
-          />
-        </template>
 
         <!-- Roll Button -->
         <div class="action-section">
